@@ -120,8 +120,8 @@ class Client
 
         $this->merchantCode = (string) is_array($args[0]) ? $args[0]['merchant_code'] : $args[0];
         $this->apiKey = (string) is_array($args[0]) ? $args[0]['api_key'] : $args[1];
-        $this->privateKey = (string) is_array($args[0]) ? $args[0]['private_key'] : $args[1];
-        $this->mode = (string) is_array($args[0]) ? $args[0]['mode'] : $args[2];
+        $this->privateKey = (string) is_array($args[0]) ? $args[0]['private_key'] : $args[2];
+        $this->mode = (string) is_array($args[0]) ? $args[0]['mode'] : $args[3];
 
         $baseUri = ($this->mode == Constant::MODE_DEVELOPMENT)
             ? Constant::URL_DEVELOPMENT
@@ -149,8 +149,7 @@ class Client
                 ]);
             },
             'headers' => [
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'User-Agent' => 'zerosdev/tripay-sdk-php',
+                'Authorization' => 'Bearer ' . $this->apiKey
             ]
         ];
 
@@ -165,40 +164,19 @@ class Client
         $this->client = $this->createHttpClient($options);
     }
 
-    /**
-     * Create HTTP client
-     *
-     * @param array $options
-     * @return HttpClient
-     */
     private function createHttpClient(array $options): HttpClient
     {
         return new HttpClient($options);
     }
 
-    /**
-     * Performe GET request
-     *
-     * @param string $endpoint
-     * @param array $headers
-     * @return Response
-     */
-    public function get(string $endpoint, array $headers = []): Response
+    public function get($endpoint, array $headers = []): Response
     {
         return $this->client->get($endpoint, [
             'headers' => $headers,
         ]);
     }
 
-    /**
-     * Performe POST request
-     *
-     * @param string $endpoint
-     * @param array $payloads
-     * @param array $headers
-     * @return Response
-     */
-    public function post(string $endpoint, array $payloads = [], array $headers = []): Response
+    public function post($endpoint, array $payloads, array $headers = []): Response
     {
         return $this->client->post($endpoint, [
             'json' => $payloads,
@@ -206,11 +184,6 @@ class Client
         ]);
     }
 
-    /**
-     * Get debug data
-     *
-     * @return object
-     */
     public function debugs(): object
     {
         return (object) $this->debugs;
